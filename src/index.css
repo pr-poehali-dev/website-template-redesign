@@ -99,3 +99,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Версия для слабовидящих по ГОСТ Р 52872-2019 */
+.vision-mode {
+  font-size: 20px !important;
+  filter: none;
+}
+.vision-mode * {
+  font-family: "PT Serif", Georgia, serif !important;
+  letter-spacing: 0.05em;
+}
+.vision-mode .vi-bg {
+  background: #000 !important;
+  color: #ffeb00 !important;
+}
+.vision-mode .vi-text {
+  color: #ffeb00 !important;
+}
+.vision-mode img:not(.vi-keep) {
+  filter: grayscale(100%) contrast(1.2);
+}
+.vision-mode a {
+  color: #ffeb00 !important;
+  text-decoration: underline !important;
+}
+
+.retro-menu-item {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
