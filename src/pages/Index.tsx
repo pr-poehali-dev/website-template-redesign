@@ -22,12 +22,40 @@ const MINISTRIES = [
   { label: 'Единое окно доступа', short: 'Единое окно' },
 ];
 
-const MENU = [
+const INFO_SECTIONS = [
+  'Основные сведения',
+  'Структура и органы управления образовательной организацией',
+  'Документы',
+  'Образование',
+  'Образовательные стандарты',
+  'Руководство. Педагогический (научно-педагогический) состав',
+  'Материально-техническое обеспечение и оснащённость образовательного процесса',
+  'Стипендии и иные виды материальной поддержки',
+  'Платные образовательные услуги',
+  'Финансово-хозяйственная деятельность',
+  'Вакантные места для приёма (перевода)',
+  'Доступная среда',
+  'Международное сотрудничество',
+];
+
+const MENU: { id: string; label: string; submenu?: string[] }[] = [
   { id: 'main', label: 'ГЛАВНАЯ' },
-  { id: 'info', label: 'СВЕДЕНИЯ ОБ ОБРАЗОВАТЕЛЬНОЙ ОРГАНИЗАЦИИ' },
+  { id: 'info', label: 'СВЕДЕНИЯ ОБ ОБРАЗОВАТЕЛЬНОЙ ОРГАНИЗАЦИИ', submenu: INFO_SECTIONS },
   { id: 'enroll', label: 'АБИТУРИЕНТУ' },
   { id: 'distance', label: 'ДИСТАНЦИОННОЕ ОБУЧЕНИЕ' },
   { id: 'contacts', label: 'КОНТАКТЫ' },
+];
+
+const VI_SCHEMES = [
+  { id: 'white', label: 'C', bg: '#fff', fg: '#000' },
+  { id: 'black', label: 'C', bg: '#000', fg: '#ffeb00' },
+  { id: 'blue', label: 'C', bg: '#062c54', fg: '#9dd1ff' },
+];
+
+const VI_SCALES = [
+  { id: 1, label: 'A', size: 'text-sm' },
+  { id: 1.25, label: 'A', size: 'text-lg' },
+  { id: 1.5, label: 'A', size: 'text-2xl' },
 ];
 
 const EXPENSES = [
@@ -41,7 +69,12 @@ const EXPENSES = [
 
 export default function Index() {
   const [vision, setVision] = useState(false);
+  const [viScheme, setViScheme] = useState('white');
+  const [viScale, setViScale] = useState(1.25);
+  const [viImages, setViImages] = useState(true);
   const [active, setActive] = useState('main');
+  const [infoSection, setInfoSection] = useState('Финансово-хозяйственная деятельность');
+  const [openDropdown, setOpenDropdown] = useState(false);
   const [slide, setSlide] = useState(0);
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -68,18 +101,73 @@ export default function Index() {
 
   return (
     <div
-      className={`${vision ? 'vision-mode' : ''} min-h-screen bg-[#e9e9e9] font-sans text-[#222]`}
+      style={{ ['--vi-scale' as string]: viScale }}
+      className={`${vision ? `vision-mode vi-scheme-${viScheme} ${viImages ? '' : 'vision-no-images'}` : ''} min-h-screen bg-[#e9e9e9] font-sans text-[#222]`}
     >
       <div className="mx-auto w-full max-w-[1200px] bg-white shadow-sm">
         {/* БЛОК А: Техническая шапка */}
         <div className="flex flex-col items-center justify-between gap-2 border-b border-gray-300 px-3 py-2 sm:flex-row">
-          <button
-            onClick={() => setVision((v) => !v)}
-            className="flex items-center gap-2 rounded border border-gray-300 px-3 py-1.5 text-sm font-bold text-[#1a3a6b] transition-colors hover:bg-gray-100"
-          >
-            <Icon name="Eye" size={18} />
-            Версия для слабовидящих
-          </button>
+          {!vision ? (
+            <button
+              onClick={() => setVision(true)}
+              className="flex items-center gap-2 rounded border border-gray-300 px-3 py-1.5 text-sm font-bold text-[#1a3a6b] transition-colors hover:bg-gray-100"
+            >
+              <Icon name="Eye" size={18} />
+              Версия для слабовидящих
+            </button>
+          ) : (
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-semibold">
+              {/* Размер шрифта */}
+              <div className="flex items-center gap-1">
+                <span className="mr-1">Размер шрифта:</span>
+                {VI_SCALES.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => setViScale(s.id)}
+                    className={`flex h-8 w-8 items-center justify-center border ${s.size} ${
+                      viScale === s.id ? 'border-current bg-black/10 font-bold' : 'border-gray-400'
+                    }`}
+                  >
+                    {s.label}
+                  </button>
+                ))}
+              </div>
+              {/* Цвета сайта */}
+              <div className="flex items-center gap-1">
+                <span className="mr-1">Цвета сайта:</span>
+                {VI_SCHEMES.map((c) => (
+                  <button
+                    key={c.id}
+                    onClick={() => setViScheme(c.id)}
+                    style={{ background: c.bg, color: c.fg }}
+                    className={`flex h-8 w-8 items-center justify-center rounded border font-bold ${
+                      viScheme === c.id ? 'border-2 border-sky-500' : 'border-gray-400'
+                    }`}
+                  >
+                    {c.label}
+                  </button>
+                ))}
+              </div>
+              {/* Изображения */}
+              <button
+                onClick={() => setViImages((v) => !v)}
+                className="flex items-center gap-2"
+              >
+                <span>Изображения:</span>
+                <span className="flex h-7 w-14 items-center justify-center border border-gray-400 text-xs font-bold">
+                  {viImages ? 'Вкл.' : 'Выкл.'}
+                </span>
+              </button>
+              {/* Обычная версия */}
+              <button
+                onClick={() => setVision(false)}
+                className="flex items-center gap-1 underline"
+              >
+                <Icon name="RotateCcw" size={16} />
+                Обычная версия
+              </button>
+            </div>
+          )}
           <div className="flex flex-wrap items-center justify-center gap-3">
             {MINISTRIES.map((m) => (
               <div
@@ -165,20 +253,54 @@ export default function Index() {
             className={`${mobileMenu ? 'flex' : 'hidden'} flex-col sm:flex sm:flex-row sm:flex-wrap`}
           >
             {MENU.map((item) => (
-              <li key={item.id} className="border-t border-gray-700 sm:border-l sm:border-t-0">
+              <li
+                key={item.id}
+                className="relative border-t border-gray-700 sm:border-l sm:border-t-0"
+                onMouseLeave={() => item.submenu && setOpenDropdown(false)}
+              >
                 <button
                   onClick={() => {
-                    setActive(item.id);
-                    setMobileMenu(false);
+                    if (item.submenu) {
+                      setActive(item.id);
+                      setOpenDropdown((o) => !o);
+                    } else {
+                      setActive(item.id);
+                      setMobileMenu(false);
+                    }
                   }}
-                  className={`retro-menu-item block w-full px-4 py-3 text-left text-xs font-bold tracking-wide sm:text-center ${
+                  onMouseEnter={() => item.submenu && setOpenDropdown(true)}
+                  className={`retro-menu-item flex w-full items-center justify-between gap-1 px-4 py-3 text-left text-xs font-bold tracking-wide sm:justify-center sm:text-center ${
                     active === item.id
                       ? 'bg-[#555] text-white'
                       : 'text-gray-200 hover:bg-[#444]'
                   }`}
                 >
                   {item.label}
+                  {item.submenu && <Icon name="ChevronDown" size={14} />}
                 </button>
+
+                {item.submenu && openDropdown && (
+                  <ul className="left-0 top-full z-30 w-full bg-[#3a3a3a] text-white shadow-xl sm:absolute sm:w-[480px]">
+                    {item.submenu.map((sub) => (
+                      <li key={sub} className="border-t border-gray-600">
+                        <button
+                          onClick={() => {
+                            setActive('info');
+                            setInfoSection(sub);
+                            setOpenDropdown(false);
+                            setMobileMenu(false);
+                          }}
+                          className={`flex w-full items-center gap-2 px-5 py-3 text-left text-[13px] hover:bg-[#4d4d4d] ${
+                            active === 'info' && infoSection === sub ? 'bg-[#4d4d4d]' : ''
+                          }`}
+                        >
+                          <Icon name="ChevronRight" size={13} className="shrink-0 text-gray-400" />
+                          {sub}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </li>
             ))}
           </ul>
@@ -273,44 +395,53 @@ export default function Index() {
           ) : active === 'info' ? (
             <article className="vi-text font-serif text-[#333]">
               <h2 className="mb-5 font-serif text-2xl font-bold text-[#1a3a6b]">
-                Финансово-хозяйственная деятельность
+                {infoSection}
               </h2>
-              <p className="mb-4 text-[15px] leading-relaxed">
-                <strong>1.</strong> Объём образовательной деятельности, финансовое
-                обеспечение которой осуществляется за счёт бюджетных ассигнований
-                федерального бюджета, бюджетов субъектов Российской Федерации,
-                местных бюджетов, по договорам об образовании за счёт средств
-                физических и (или) юридических лиц.
-              </p>
-              <h3 className="mb-3 mt-6 text-lg font-bold text-[#222]">
-                2. Структура расходов (тыс. руб.) по итогам финансового года
-              </h3>
-              <ul className="space-y-2">
-                {EXPENSES.map((e) => (
-                  <li key={e} className="flex items-start gap-2 text-[15px]">
-                    <Icon name="Dot" size={20} className="mt-0.5 shrink-0 text-[#1a3a6b]" />
-                    <span>{e}</span>
-                  </li>
-                ))}
-              </ul>
-              <h3 className="mb-3 mt-6 text-lg font-bold text-[#222]">Документы</h3>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {['Лицензия на образовательную деятельность', 'Свидетельство о регистрации'].map(
-                  (doc) => (
-                    <Dialog key={doc}>
-                      <DialogTrigger asChild>
-                        <button className="flex items-center gap-3 rounded border border-gray-300 p-3 text-left hover:bg-gray-50">
-                          <Icon name="FileText" size={28} className="shrink-0 text-[#c0392b]" />
-                          <span className="text-sm font-semibold text-[#1a3a6b]">{doc}</span>
-                        </button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-2xl">
-                        <img src={CERT} alt={doc} className="vi-keep w-full" />
-                      </DialogContent>
-                    </Dialog>
-                  )
-                )}
-              </div>
+              {infoSection === 'Финансово-хозяйственная деятельность' ? (
+                <>
+                  <p className="mb-4 text-[15px] leading-relaxed">
+                    <strong>1.</strong> Объём образовательной деятельности, финансовое
+                    обеспечение которой осуществляется за счёт бюджетных ассигнований
+                    федерального бюджета, бюджетов субъектов Российской Федерации,
+                    местных бюджетов, по договорам об образовании за счёт средств
+                    физических и (или) юридических лиц.
+                  </p>
+                  <h3 className="mb-3 mt-6 text-lg font-bold text-[#222]">
+                    2. Структура расходов (тыс. руб.) по итогам финансового года
+                  </h3>
+                  <ul className="space-y-2">
+                    {EXPENSES.map((e) => (
+                      <li key={e} className="flex items-start gap-2 text-[15px]">
+                        <Icon name="Dot" size={20} className="mt-0.5 shrink-0 text-[#1a3a6b]" />
+                        <span>{e}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <h3 className="mb-3 mt-6 text-lg font-bold text-[#222]">Документы</h3>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {['Лицензия на образовательную деятельность', 'Свидетельство о регистрации'].map(
+                      (doc) => (
+                        <Dialog key={doc}>
+                          <DialogTrigger asChild>
+                            <button className="flex items-center gap-3 rounded border border-gray-300 p-3 text-left hover:bg-gray-50">
+                              <Icon name="FileText" size={28} className="shrink-0 text-[#c0392b]" />
+                              <span className="text-sm font-semibold text-[#1a3a6b]">{doc}</span>
+                            </button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl">
+                            <img src={CERT} alt={doc} className="vi-keep w-full" />
+                          </DialogContent>
+                        </Dialog>
+                      )
+                    )}
+                  </div>
+                </>
+              ) : (
+                <p className="min-h-[200px] text-[15px] leading-relaxed">
+                  Раздел «{infoSection}» находится в наполнении. Напишите, какую
+                  информацию здесь разместить, и я добавлю содержимое.
+                </p>
+              )}
             </article>
           ) : (
             <article className="vi-text min-h-[300px] font-serif text-[#333]">
@@ -339,6 +470,12 @@ export default function Index() {
                 <span className="text-white">
                   {MENU.find((m) => m.id === active)?.label}
                 </span>
+              </>
+            )}
+            {active === 'info' && (
+              <>
+                <Icon name="ChevronRight" size={13} className="text-gray-500" />
+                <span className="text-white">{infoSection}</span>
               </>
             )}
           </div>

@@ -102,26 +102,62 @@
 
 /* Версия для слабовидящих по ГОСТ Р 52872-2019 */
 .vision-mode {
-  font-size: 20px !important;
-  filter: none;
+  --vi-bg: #fff;
+  --vi-fg: #000;
+  --vi-accent: #000;
+  font-size: calc(16px * var(--vi-scale, 1.25)) !important;
+}
+/* Цветовая схема: белый фон / чёрный текст */
+.vision-mode.vi-scheme-white {
+  --vi-bg: #fff;
+  --vi-fg: #000;
+  --vi-accent: #000;
+}
+/* Цветовая схема: чёрный фон / жёлтый текст */
+.vision-mode.vi-scheme-black {
+  --vi-bg: #000;
+  --vi-fg: #ffeb00;
+  --vi-accent: #ffeb00;
+}
+/* Цветовая схема: синий фон / голубой текст */
+.vision-mode.vi-scheme-blue {
+  --vi-bg: #062c54;
+  --vi-fg: #9dd1ff;
+  --vi-accent: #9dd1ff;
+}
+
+.vision-mode,
+.vision-mode .vi-bg,
+.vision-mode .vi-text,
+.vision-mode main,
+.vision-mode header,
+.vision-mode nav,
+.vision-mode footer {
+  background: var(--vi-bg) !important;
+  color: var(--vi-fg) !important;
 }
 .vision-mode * {
   font-family: "PT Serif", Georgia, serif !important;
   letter-spacing: 0.05em;
+  border-color: var(--vi-fg) !important;
 }
-.vision-mode .vi-bg {
-  background: #000 !important;
-  color: #ffeb00 !important;
-}
-.vision-mode .vi-text {
-  color: #ffeb00 !important;
-}
-.vision-mode img:not(.vi-keep) {
-  filter: grayscale(100%) contrast(1.2);
+.vision-mode h1,
+.vision-mode h2,
+.vision-mode h3,
+.vision-mode p,
+.vision-mode span,
+.vision-mode li,
+.vision-mode strong,
+.vision-mode button {
+  color: var(--vi-fg) !important;
 }
 .vision-mode a {
-  color: #ffeb00 !important;
+  color: var(--vi-accent) !important;
   text-decoration: underline !important;
+}
+/* Изображения скрываются при отключении картинок */
+.vision-no-images img {
+  display: none !important;
 }
 
 .retro-menu-item {
