@@ -105,7 +105,22 @@
   --vi-bg: #fff;
   --vi-fg: #000;
   --vi-accent: #000;
-  font-size: calc(16px * var(--vi-scale, 1.25)) !important;
+}
+.vision-mode,
+.vision-mode p,
+.vision-mode span,
+.vision-mode li,
+.vision-mode td,
+.vision-mode th,
+.vision-mode label,
+.vision-mode button,
+.vision-mode a,
+.vision-mode input,
+.vision-mode h1,
+.vision-mode h2,
+.vision-mode h3 {
+  font-size: calc(1rem * var(--vi-scale, 1.25)) !important;
+  line-height: 1.6 !important;
 }
 /* Цветовая схема: белый фон / чёрный текст */
 .vision-mode.vi-scheme-white {

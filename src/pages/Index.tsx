@@ -14,13 +14,7 @@ const SLIDES = [
 
 const CERT = 'https://cdn.poehali.dev/projects/bd448f15-089e-4927-950d-151274b151b0/files/55643273-29ec-496c-8d18-6fe51f9ce3c0.jpg';
 
-const MINISTRIES = [
-  { label: 'Министерство образования и науки РФ', short: 'Минобрнауки' },
-  { label: 'Министерство просвещения России', short: 'Минпросвещения' },
-  { label: 'Федеральная служба по надзору', short: 'Рособрнадзор' },
-  { label: 'Российское образование', short: 'Edu.ru' },
-  { label: 'Единое окно доступа', short: 'Единое окно' },
-];
+const MINISTRIES_LOGOS_URL = 'https://cdn.poehali.dev/projects/bd448f15-089e-4927-950d-151274b151b0/bucket/696dc34d-b8f7-4ad0-b5c7-c29130779f55.png';
 
 const INFO_SECTIONS = [
   'Основные сведения',
@@ -168,17 +162,12 @@ export default function Index() {
               </button>
             </div>
           )}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {MINISTRIES.map((m) => (
-              <div
-                key={m.short}
-                title={m.label}
-                className="flex h-9 items-center gap-1.5 px-1 text-[10px] font-semibold uppercase leading-tight text-gray-500"
-              >
-                <Icon name="Landmark" size={20} className="text-[#1a3a6b]" />
-                <span className="hidden max-w-[90px] lg:block">{m.short}</span>
-              </div>
-            ))}
+          <div className="w-full overflow-x-auto">
+            <img
+              src={MINISTRIES_LOGOS_URL}
+              alt="Логотипы министерств и ведомств"
+              className="h-10 w-auto min-w-full object-contain object-left"
+            />
           </div>
         </div>
 
